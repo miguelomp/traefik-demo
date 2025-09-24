@@ -4,14 +4,24 @@ networks:
     external: true
 
 services:
-  whoami:
+  whoami-internal:
     image: traefik/whoami
     restart: "always"
     expose:
       - 80
     labels:
-      - "proxy=internal"
       - "traefik.enable=true"
 
       - "traefik.http.routers.whoami.rule=Path(`/whoami`)"
       - "traefik.http.routers.whoami.entrypoints=internal"
+  whoami-external:
+    image: traefik/whoami
+    restart: "always"
+    expose:
+      - 80
+    labels:
+      - "traefik.enable=true"
+
+      - "traefik.http.routers.whoami-external.rule=Path(`/whoami-external`)"
+      - "traefik.http.routers.whoami-external.entrypoints=https"
+      - "traefik.http.routers.whoami-external.priority=1000"
