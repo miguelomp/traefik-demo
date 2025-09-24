@@ -19,6 +19,8 @@ entryPoints:
           scheme: https
   https:
     address: ":443"
+    http:
+      tls: true
   internal:
     address: ":81"
 
