@@ -1,0 +1,38 @@
+networks:
+  default:
+    name: traefik_default
+    external: true
+
+services:
+  proxy-external:
+    image: traefik
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./external/dynamic.yml:/dynamic.yml:ro"
+      - "./external/static.yml:/traefik.yml:ro"
+      - "./certs:/certs:ro"
+    labels:
+      - "proxy=external"
+      - "traefik.enable=true"
+
+      # - "traefik.http.routers.traefik.entrypoints=http"
+      # - "traefik.http.routers.traefik.rule=(PathPrefix(`/dashboard`) || PathPrefix(`/api`))"
+      # - "traefik.http.routers.traefik.service=api@internal"
+  proxy-internal:
+    image: traefik
+    expose:
+      - 80
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./internal/dynamic.yml:/dynamic.yml:ro"
+      - "./internal/static.yml:/traefik.yml:ro"
+    labels:
+      - "proxy=internal"
+      - "traefik.enable=true"
+
+      - "traefik.http.routers.traefik.entrypoints=http"
+      - "traefik.http.routers.traefik.rule=(PathPrefix(`/dashboard`) || PathPrefix(`/api`))"
+      - "traefik.http.routers.traefik.service=api@internal"

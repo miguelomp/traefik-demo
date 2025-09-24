@@ -7,8 +7,11 @@ services:
   whoami:
     image: traefik/whoami
     restart: "always"
+    expose:
+      - 80
     labels:
+      - "proxy=internal"
       - "traefik.enable=true"
+
       - "traefik.http.routers.whoami.rule=Path(`/whoami`)"
-      - "traefik.http.routers.whoami.entrypoints=internal"
-      - "traefik.http.routers.whoami.tls=true"
+      - "traefik.http.routers.whoami.entrypoints=http"
