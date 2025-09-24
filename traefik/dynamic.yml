@@ -8,7 +8,6 @@ http:
       rule: "(ClientIP(`127.0.0.0/24`) || ClientIP(`192.168.0.16/32`))"
       service: internal
       priority: 10
-      tls: {}
     fallback:
       entryPoints:
         - https
@@ -17,7 +16,6 @@ http:
       middlewares:
         - basic-auth
       priority: 1
-      tls: {}
   
   services:
     internal:
