@@ -1,5 +1,5 @@
 services:
-  proxy-external:
+  proxy:
     image: traefik
     ports:
       - "80:80"

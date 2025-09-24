@@ -14,4 +14,4 @@ services:
       - "traefik.enable=true"
 
       - "traefik.http.routers.whoami.rule=Path(`/whoami`)"
-      - "traefik.http.routers.whoami.entrypoints=http"
+      - "traefik.http.routers.whoami.entrypoints=internal"
