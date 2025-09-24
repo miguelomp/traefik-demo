@@ -1,0 +1,45 @@
+# dynamic yaml
+
+http:
+  routers:
+    allowed:
+      entryPoints:
+        - https
+      rule: "(ClientIP(`100.123.0.0/16`) || ClientIP(`127.0.0.1/32`) || ClientIP(`127.0.0.0/24`))"
+      service: internal
+      priority: 10
+      tls: {}
+    fallback:
+      entryPoints:
+        - https
+      rule: "ClientIP(`0.0.0.0/0`)"  # Match all hosts
+      service: internal
+      middlewares:
+        - basic-auth
+      priority: 1
+      tls: {}
+  
+  services:
+    internal:
+      loadBalancer:
+        servers:
+          - url: "http://proxy:81/"
+            preservePath: true
+
+  middlewares:
+    basic-auth:
+      basicAuth:
+        users:
+          - "admin:$2y$12$kojSmwwx6PiAm3Vjtn5KtOLilpwaPSl5XwXL.PSakG79Rs3qVuzGq"
+
+tls:
+  certificates:
+    - certFile: /certs/local-cert.pem
+      keyFile: /certs/local-key.pem
+      stores:
+        - default
+  stores:
+    default:
+      defaultCertificate:
+        certFile: /certs/local-cert.pem
+        keyFile: /certs/local-key.pem
